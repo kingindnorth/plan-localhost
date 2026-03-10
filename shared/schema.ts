@@ -9,6 +9,12 @@ export const stepSchema = z.object({
   distance: z.string(),
   travelMethod: z.enum(["walk", "auto", "cab", "transit"]),
   isCompleted: z.boolean().default(false),
+  images: z.array(z.string()).default([]),
+  reviews: z.array(z.object({
+    author: z.string(),
+    rating: z.number(),
+    text: z.string()
+  })).default([])
 });
 
 export const planSchema = z.object({

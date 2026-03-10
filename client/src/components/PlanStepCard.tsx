@@ -8,6 +8,7 @@ interface PlanStepCardProps {
   index: number;
   isCompleted: boolean;
   onToggle: (id: string) => void;
+  onViewDetails: (step: Step) => void;
 }
 
 const methodIcons = {
@@ -17,7 +18,7 @@ const methodIcons = {
   transit: Train,
 };
 
-export function PlanStepCard({ step, index, isCompleted, onToggle }: PlanStepCardProps) {
+export function PlanStepCard({ step, index, isCompleted, onToggle, onViewDetails }: PlanStepCardProps) {
   const MethodIcon = methodIcons[step.travelMethod] || Navigation;
 
   return (
@@ -45,8 +46,9 @@ export function PlanStepCard({ step, index, isCompleted, onToggle }: PlanStepCar
 
       {/* Card Content */}
       <div 
+        onClick={() => onViewDetails(step)}
         className={cn(
-          "flex-1 glass-card rounded-2xl p-5 transition-all duration-300",
+          "flex-1 glass-card rounded-2xl p-5 transition-all duration-300 cursor-pointer",
           isCompleted ? "opacity-60 grayscale-[0.3]" : "hover:-translate-y-1"
         )}
       >
@@ -74,9 +76,16 @@ export function PlanStepCard({ step, index, isCompleted, onToggle }: PlanStepCar
             <DollarSign className="w-4 h-4" />
             {step.cost === 0 ? "Free" : step.cost}
           </div>
-          <button className="text-xs font-semibold text-primary hover:text-primary/80 transition-colors flex items-center gap-1">
+          <button 
+            onClick={(e) => {
+              e.stopPropagation();
+              // TODO: Open maps functionality
+              console.log('Open maps for:', step.placeName);
+            }}
+            className="text-xs font-semibold text-primary hover:text-primary/80 transition-colors flex items-center gap-1"
+          >
             <MapPin className="w-3 h-3" />
-            View Map
+            Open Maps
           </button>
         </div>
       </div>

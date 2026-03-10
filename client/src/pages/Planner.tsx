@@ -3,8 +3,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import Confetti from "react-confetti";
 import { MapPin, Navigation2, Search, ArrowRight, Loader2, Sparkles, Map, Calendar, Wallet, CheckCircle2 } from "lucide-react";
 import { useGeneratePlan } from "@/hooks/use-plan";
-import { GeneratePlanRequest, Plan } from "@shared/schema";
+import { GeneratePlanRequest, Plan, Step } from "@shared/schema";
 import { PlanStepCard } from "@/components/PlanStepCard";
+import { LocationDetail } from "@/components/LocationDetail";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 type ViewState = 'welcome' | 'form' | 'loading' | 'plan';
@@ -21,6 +22,7 @@ export default function Planner() {
   const [plan, setPlan] = useState<Plan | null>(null);
   const [completedSteps, setCompletedSteps] = useState<Set<string>>(new Set());
   const [showConfetti, setShowConfetti] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState<Step | null>(null);
 
   // Handle Confetti when all steps are completed
   useEffect(() => {
@@ -317,6 +319,7 @@ export default function Planner() {
                     index={index}
                     isCompleted={completedSteps.has(step.id)}
                     onToggle={toggleStep}
+                    onViewDetails={setSelectedLocation}
                   />
                 ))}
               </div>
@@ -404,6 +407,17 @@ export default function Planner() {
               </div>
             </div>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Location Detail Modal */}
+      <AnimatePresence>
+        {selectedLocation && (
+          <LocationDetail 
+            step={selectedLocation}
+            onClose={() => setSelectedLocation(null)}
+            suggestions={plan?.suggestions}
+          />
         )}
       </AnimatePresence>
     </div>
